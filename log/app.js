@@ -116,7 +116,7 @@ function renderCountryPicker() {
 }
 
 function renderPlacePicker(country) {
-  const previous = previousPlacesFor(country);
+  const previous = previousPlacesFor(country).filter(p => p.type !== "transit");
   render(`
     <div class="breadcrumb"><button id="back-btn">← back</button></div>
     <p class="question">Place (town, or transport if on the road)?</p>

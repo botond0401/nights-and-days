@@ -98,10 +98,25 @@ select#year-select {
 .legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 18px;
+  gap: 14px 28px;
   margin-top: 18px;
   padding-top: 14px;
   border-top: 1px solid var(--gridline);
+}
+
+.legend-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+
+.legend-country {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-right: 2px;
 }
 
 .legend-item {
@@ -150,6 +165,47 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; color: var(--tex
 td.rank { color: var(--text-muted); width: 24px; }
 
 .name-cell { display: flex; align-items: center; gap: 8px; }
+
+.bar-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 84px 1fr 32px;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+}
+
+.bar-label {
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bar-track {
+  height: 12px;
+  background: var(--gridline);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  min-width: 3px;
+}
+
+.bar-value {
+  text-align: right;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
 
 .tooltip {
   position: fixed;
