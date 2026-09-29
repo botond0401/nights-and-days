@@ -1,11 +1,11 @@
 import { GIST_ID } from "../assets/data.js";
 import { COUNTRIES } from "../assets/countries.js";
 
-// Token scoped to ONLY the "gist" permission — created at
-// https://github.com/settings/tokens (classic token, "gist" scope only).
-// Safe-by-scope: even if this public page's source is inspected, this
-// token cannot read or write anything except this one gist.
-const GITHUB_TOKEN = "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";
+// Writes go through a Cloudflare Worker proxy (cloudflare-worker/nights-log-proxy.js)
+// so the real GitHub token stays server-side -- GitHub auto-revokes any GitHub
+// token it detects committed to a public repo, so it can never live here.
+const WORKER_URL = "PASTE_YOUR_WORKER_URL_HERE";
+const APP_SECRET = "6b2ba7d84b35e8be5555ec93b178d1b78ee20809a1d9eaf1";
 
 const TRANSIT_HINTS = ["train","plane","flight","bus","car","ferry","boat","coach","tram","ship","taxi"];
 
@@ -32,20 +32,17 @@ async function loadRecords() {
 }
 
 async function saveRecord(record) {
-  const others = records.filter(r => r.date !== record.date);
-  const updated = [...others, record].sort((a, b) => a.date.localeCompare(b.date));
-  const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
-    method: "PATCH",
+  const res = await fetch(WORKER_URL, {
+    method: "POST",
     headers: {
-      Authorization: `Bearer ${GITHUB_TOKEN}`,
-      Accept: "application/vnd.github+json",
+      "Content-Type": "application/json",
+      "X-App-Secret": APP_SECRET,
     },
-    body: JSON.stringify({
-      files: { "nights.json": { content: JSON.stringify(updated, null, 2) } },
-    }),
+    body: JSON.stringify(record),
   });
-  if (!res.ok) throw new Error(`Couldn't save (HTTP ${res.status}). Check the embedded token.`);
-  records = updated;
+  if (!res.ok) throw new Error(`Couldn't save (HTTP ${res.status}). Check the Worker proxy.`);
+  records = [...records.filter(r => r.date !== record.date), record]
+    .sort((a, b) => a.date.localeCompare(b.date));
 }
 
 function previousPlacesFor(country) {
