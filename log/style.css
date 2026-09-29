@@ -1,0 +1,94 @@
+.narrow { max-width: 480px; }
+.back { margin: 0 0 20px; font-size: 0.85rem; }
+
+.date-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.date-row input {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--page);
+  color: var(--text-primary);
+}
+
+.step { margin-top: 16px; }
+
+.question {
+  font-size: 1.05rem;
+  font-weight: 650;
+  margin: 0 0 16px;
+}
+
+.choice-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.choice {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--page);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.choice:hover { border-color: var(--series-1); }
+.choice.secondary { color: var(--text-secondary); font-weight: 400; }
+
+.text-input-row {
+  margin-top: 14px;
+  display: flex;
+  gap: 8px;
+}
+
+.text-input-row input {
+  flex: 1;
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--page);
+  color: var(--text-primary);
+}
+
+.confirm-box {
+  text-align: center;
+  padding: 12px 0;
+}
+
+.confirm-box .big {
+  font-size: 1.1rem;
+  font-weight: 650;
+  margin-bottom: 6px;
+}
+
+.error-box {
+  color: #e34948;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.breadcrumb {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.breadcrumb button {
+  border: none;
+  background: none;
+  color: var(--series-1);
+  font-size: 0.8rem;
+  padding: 0;
+}

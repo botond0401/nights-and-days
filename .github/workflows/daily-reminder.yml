@@ -1,0 +1,22 @@
+name: Daily nights reminder
+
+on:
+  schedule:
+    - cron: "0 20 * * *" # 20:00 UTC daily (~21/22:00 CET) — edit to taste
+  workflow_dispatch: {}
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send reminder email
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          from: Nights Tracker
+          to: ${{ secrets.MAIL_USERNAME }}
+          subject: "Where did you sleep tonight?"
+          body: "Log tonight's night: https://botond0401.github.io/nights-and-days/log/"

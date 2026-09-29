@@ -1,0 +1,31 @@
+name: Monthly missed-days check
+
+on:
+  schedule:
+    - cron: "30 0 1 * *" # 00:30 UTC on the 1st of each month — checks the month just ended
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Find missing days last month
+        id: missing
+        run: node scripts/check-missed-days.js
+        env:
+          GIST_ID: "9286341881cfd023e7ec21b7a821471d"
+
+      - name: Email the missed days
+        if: steps.missing.outputs.has_missing == 'true'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          from: Nights Tracker
+          to: ${{ secrets.MAIL_USERNAME }}
+          subject: "You missed some nights last month"
+          body: ${{ steps.missing.outputs.missing_list }}
