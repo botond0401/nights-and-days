@@ -18,7 +18,7 @@ const COUNTRY_COLORS = {
   "Singapore":      { light: "#0e7c86", dark: "#14a3b0" },
   "Spain":          { light: "#b8860b", dark: "#d4a017" },
   "Slovenia":       { light: "#d46a5f", dark: "#e08a80" },
-  "United Kingdom": { light: "#5a6b7a", dark: "#7f93a3" },
+  "England":        { light: "#5a6b7a", dark: "#7f93a3" },
   "India":          { light: "#8e4585", dark: "#b064a6" },
 };
 const FALLBACK_COUNTRY_COLOR = { light: "#767676", dark: "#9a9a9a" };

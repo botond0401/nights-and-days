@@ -17,6 +17,6 @@ export const COUNTRIES = [
 "Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia",
 "South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria",
 "Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey",
-"Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu",
+"Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","England","United States","Uruguay","Uzbekistan","Vanuatu",
 "Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"
 ];
