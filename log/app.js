@@ -4,7 +4,7 @@ import { COUNTRIES } from "../assets/countries.js";
 // Writes go through a Cloudflare Worker proxy (cloudflare-worker/nights-log-proxy.js)
 // so the real GitHub token stays server-side -- GitHub auto-revokes any GitHub
 // token it detects committed to a public repo, so it can never live here.
-const WORKER_URL = "PASTE_YOUR_WORKER_URL_HERE";
+const WORKER_URL = "https://aged-bonus-91cf.botond-kov0401.workers.dev/";
 const APP_SECRET = "6b2ba7d84b35e8be5555ec93b178d1b78ee20809a1d9eaf1";
 
 const TRANSIT_HINTS = ["train","plane","flight","bus","car","ferry","boat","coach","tram","ship","taxi"];
