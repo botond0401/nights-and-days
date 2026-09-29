@@ -15,11 +15,7 @@
   <p class="subtitle">Tracking nights since Jan 1, 2024.</p>
 
   <div class="controls">
-    <div class="tabs" id="scope-tabs">
-      <button class="tab active" data-scope="year">By year</button>
-      <button class="tab" data-scope="lifetime">Lifetime</button>
-    </div>
-    <select id="year-select" class="btn"></select>
+    <select id="scope-select" class="btn"></select>
   </div>
 
   <div id="status" class="status"></div>
@@ -27,7 +23,7 @@
   <section id="summary" class="card summary"></section>
 
   <section id="heatmap-section" class="card">
-    <div id="heatmap"></div>
+    <div id="heatmap-container"></div>
     <div id="legend" class="legend"></div>
   </section>
 

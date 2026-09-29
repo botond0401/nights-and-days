@@ -91,10 +91,8 @@ function transitColor() { return pick(TRANSIT_COLOR); }
 function otherBarColor() { return pick(OTHER_BAR_COLOR); }
 
 const statusEl = document.getElementById("status");
-const yearSelect = document.getElementById("year-select");
-const tabsEl = document.getElementById("scope-tabs");
-const heatmapSection = document.getElementById("heatmap-section");
-const heatmapEl = document.getElementById("heatmap");
+const scopeSelect = document.getElementById("scope-select");
+const heatmapContainerEl = document.getElementById("heatmap-container");
 const legendEl = document.getElementById("legend");
 const summaryEl = document.getElementById("summary");
 const countryBarChartEl = document.getElementById("country-bar-chart");
@@ -143,42 +141,50 @@ function label(record) {
   return `${d} — ${record.place}, ${record.country}`;
 }
 
-function populateYearSelect() {
-  const maxYear = Math.max(new Date().getFullYear(), ...records.map(r => Number(r.date.slice(0, 4))), DATA_START_YEAR);
-  yearSelect.innerHTML = "";
-  for (let y = maxYear; y >= DATA_START_YEAR; y--) {
-    const opt = document.createElement("option");
-    opt.value = y;
-    opt.textContent = y;
-    yearSelect.appendChild(opt);
-  }
-  yearSelect.value = state.year;
+function maxYearInData() {
+  return Math.max(new Date().getFullYear(), ...records.map(r => Number(r.date.slice(0, 4))), DATA_START_YEAR);
 }
 
-function renderHeatmap(year) {
-  heatmapEl.innerHTML = "";
+function populateScopeSelect() {
+  const maxYear = maxYearInData();
+  scopeSelect.innerHTML = "";
+  for (let y = maxYear; y >= DATA_START_YEAR; y--) {
+    const opt = document.createElement("option");
+    opt.value = String(y);
+    opt.textContent = y;
+    scopeSelect.appendChild(opt);
+  }
+  const lifetimeOpt = document.createElement("option");
+  lifetimeOpt.value = "lifetime";
+  lifetimeOpt.textContent = `${DATA_START_YEAR}–today`;
+  scopeSelect.appendChild(lifetimeOpt);
+  scopeSelect.value = state.scope === "lifetime" ? "lifetime" : String(state.year);
+}
+
+function renderHeatmapGrid(container, year) {
+  container.innerHTML = "";
   const byDate = new Map(records.filter(r => r.date.startsWith(String(year))).map(r => [r.date, r]));
 
-  heatmapEl.appendChild(document.createElement("div"));
+  container.appendChild(document.createElement("div"));
   for (let d = 1; d <= 31; d++) {
     const cell = document.createElement("div");
     cell.className = "hm-daynum";
     cell.textContent = d;
-    heatmapEl.appendChild(cell);
+    container.appendChild(cell);
   }
 
   for (let m = 0; m < 12; m++) {
     const monthLabel = document.createElement("div");
     monthLabel.className = "hm-month";
     monthLabel.textContent = MONTHS[m];
-    heatmapEl.appendChild(monthLabel);
+    container.appendChild(monthLabel);
 
     const dim = daysInMonth(year, m);
     for (let d = 1; d <= 31; d++) {
       const cell = document.createElement("div");
       if (d > dim) {
         cell.className = "hm-cell na";
-        heatmapEl.appendChild(cell);
+        container.appendChild(cell);
         continue;
       }
       const dateStr = `${year}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
@@ -190,8 +196,31 @@ function renderHeatmap(year) {
         cell.addEventListener("mousemove", moveTooltip);
         cell.addEventListener("mouseleave", hideTooltip);
       }
-      heatmapEl.appendChild(cell);
+      container.appendChild(cell);
     }
+  }
+}
+
+function renderHeatmapSection() {
+  heatmapContainerEl.innerHTML = "";
+  const years = state.scope === "lifetime"
+    ? Array.from({ length: maxYearInData() - DATA_START_YEAR + 1 }, (_, i) => maxYearInData() - i)
+    : [state.year];
+
+  for (const y of years) {
+    const block = document.createElement("div");
+    block.className = "heatmap-year-block";
+    if (state.scope === "lifetime") {
+      const yearLabel = document.createElement("div");
+      yearLabel.className = "heatmap-year-label";
+      yearLabel.textContent = y;
+      block.appendChild(yearLabel);
+    }
+    const grid = document.createElement("div");
+    grid.className = "hm-grid";
+    block.appendChild(grid);
+    heatmapContainerEl.appendChild(block);
+    renderHeatmapGrid(grid, y);
   }
 }
 
@@ -331,26 +360,19 @@ function render() {
     ? records
     : records.filter(r => r.date.startsWith(String(state.year)));
 
-  heatmapSection.style.display = state.scope === "lifetime" ? "none" : "";
-  yearSelect.style.display = state.scope === "lifetime" ? "none" : "";
-
-  if (state.scope === "year") renderHeatmap(state.year);
+  renderHeatmapSection();
   renderLegend(scopedRecords);
   renderSummary(scopedRecords);
   renderTables(scopedRecords);
 }
 
-tabsEl.addEventListener("click", (e) => {
-  const btn = e.target.closest(".tab");
-  if (!btn) return;
-  [...tabsEl.children].forEach(c => c.classList.remove("active"));
-  btn.classList.add("active");
-  state.scope = btn.dataset.scope;
-  render();
-});
-
-yearSelect.addEventListener("change", () => {
-  state.year = Number(yearSelect.value);
+scopeSelect.addEventListener("change", () => {
+  if (scopeSelect.value === "lifetime") {
+    state.scope = "lifetime";
+  } else {
+    state.scope = "year";
+    state.year = Number(scopeSelect.value);
+  }
   render();
 });
 
@@ -365,7 +387,7 @@ if (window.matchMedia) {
     statusEl.textContent = "Loading…";
     records = await fetchNights();
     townRanks = buildTownRanks(records);
-    populateYearSelect();
+    populateScopeSelect();
     statusEl.textContent = "";
     render();
   } catch (err) {

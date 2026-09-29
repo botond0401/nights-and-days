@@ -3,32 +3,11 @@
 .controls {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
   margin-bottom: 20px;
 }
 
-.tabs {
-  display: inline-flex;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.tab {
-  padding: 8px 16px;
-  border: none;
-  background: var(--surface);
-  color: var(--text-secondary);
-  font-weight: 600;
-  border-right: 1px solid var(--border);
-}
-.tab:last-child { border-right: none; }
-.tab.active { background: var(--series-1); color: #fff; }
-
-select#year-select {
-  min-width: 110px;
+select#scope-select {
+  min-width: 140px;
 }
 
 .status {
@@ -58,7 +37,21 @@ select#year-select {
 }
 
 /* Heatmap */
-#heatmap {
+#heatmap-container {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.heatmap-year-block { }
+
+.heatmap-year-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.hm-grid {
   display: grid;
   grid-template-columns: 90px repeat(31, minmax(18px, 1fr));
   gap: 3px;
@@ -142,7 +135,7 @@ select#year-select {
 
 @media (max-width: 640px) {
   .tables { grid-template-columns: 1fr; }
-  #heatmap { grid-template-columns: 70px repeat(31, minmax(14px, 1fr)); }
+  .hm-grid { grid-template-columns: 70px repeat(31, minmax(14px, 1fr)); }
 }
 
 table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
