@@ -204,7 +204,7 @@ function renderHeatmapGrid(container, year) {
 function renderHeatmapSection() {
   heatmapContainerEl.innerHTML = "";
   const years = state.scope === "lifetime"
-    ? Array.from({ length: maxYearInData() - DATA_START_YEAR + 1 }, (_, i) => maxYearInData() - i)
+    ? Array.from({ length: maxYearInData() - DATA_START_YEAR + 1 }, (_, i) => DATA_START_YEAR + i)
     : [state.year];
 
   for (const y of years) {
