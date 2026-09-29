@@ -5,7 +5,7 @@ import { COUNTRIES } from "../assets/countries.js";
 // https://github.com/settings/tokens (classic token, "gist" scope only).
 // Safe-by-scope: even if this public page's source is inspected, this
 // token cannot read or write anything except this one gist.
-const GITHUB_TOKEN = "PASTE_YOUR_GIST_SCOPED_TOKEN_HERE";
+const GITHUB_TOKEN = "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";
 
 const TRANSIT_HINTS = ["train","plane","flight","bus","car","ferry","boat","coach","tram","ship","taxi"];
 
