@@ -2,8 +2,8 @@ name: Daily nights reminder
 
 on:
   schedule:
-    - cron: "0 17 * * *" # 17:00 UTC = 19:00 CEST. Cron is UTC-fixed, so this drifts to
-                          # 18:00 CET in winter (DST ends) — tell me if you want it re-pinned then.
+    - cron: "7 17 * * *" # 17:07 UTC ≈ 19:00 CEST — off the hour to dodge GitHub's on-the-hour
+                          # scheduling congestion. Drifts to ~18:07 CET in winter (DST ends).
   workflow_dispatch: {}
 
 jobs:
