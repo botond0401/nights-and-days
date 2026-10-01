@@ -67,14 +67,14 @@ function render(html) { stepEl.innerHTML = html; }
 
 function renderZurich() {
   render(`
-    <p class="question">Did you sleep in Zurich?</p>
+    <p class="question">Did you sleep in Zürich?</p>
     <div class="choice-grid">
       <button class="choice" id="yes-btn">Yes</button>
       <button class="choice secondary" id="no-btn">No</button>
     </div>
   `);
   document.getElementById("yes-btn").onclick = () =>
-    finalize({ country: "Switzerland", place: "Zurich", type: "stay" });
+    finalize({ country: "Switzerland", place: "Zürich", type: "stay" });
   document.getElementById("no-btn").onclick = renderCountryPicker;
 }
 

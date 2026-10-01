@@ -36,7 +36,9 @@ async function main() {
   } else {
     console.log(`Missing: ${missing.join(", ")}`);
     fs.appendFileSync(process.env.GITHUB_OUTPUT, `has_missing=true\n`);
-    fs.appendFileSync(process.env.GITHUB_OUTPUT, `missing_list=You didn't log these nights: ${missing.join(", ")}\n`);
+    const body = `You didn't log these nights: ${missing.join(", ")}. `
+      + `Fill them in here: https://botond0401.github.io/nights-and-days/log/`;
+    fs.appendFileSync(process.env.GITHUB_OUTPUT, `missing_list=${body}\n`);
   }
 }
 
