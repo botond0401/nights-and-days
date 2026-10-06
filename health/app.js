@@ -135,10 +135,13 @@ function renderDayList(ym) {
 }
 
 function describe(e) {
-  if (e.type === "food") return `🍽 ${e.food}`;
+  if (e.type === "food") return `🍽 ${e.mealType ? `${e.mealType}: ` : ""}${e.food}`;
   if (e.type === "stomach") return `🤢 ${e.symptom}${e.severity ? ` — ${e.severity}` : ""}`;
   if (e.type === "toilet") return `🚽 ${e.duration}`;
-  if (e.type === "skin") return e.locations.length ? `🧴 ${e.locations.join(", ")}` : `🧴 clear`;
+  if (e.type === "skin") {
+    const base = e.locations.length ? `🧴 ${e.locations.join(", ")}` : `🧴 clear`;
+    return e.note ? `${base} — ${e.note}` : base;
+  }
   return e.type;
 }
 

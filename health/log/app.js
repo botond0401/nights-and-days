@@ -44,10 +44,13 @@ function renderSessionList() {
 }
 
 function describe(e) {
-  if (e.type === "food") return `🍽 ${e.food}`;
+  if (e.type === "food") return `🍽 ${e.mealType ? `${e.mealType}: ` : ""}${e.food}`;
   if (e.type === "stomach") return `🤢 ${e.symptom}${e.severity ? ` (${e.severity})` : ""}`;
   if (e.type === "toilet") return `🚽 ${e.duration}`;
-  if (e.type === "skin") return e.locations.length ? `🧴 ${e.locations.join(", ")}` : `🧴 clear`;
+  if (e.type === "skin") {
+    const base = e.locations.length ? `🧴 ${e.locations.join(", ")}` : `🧴 clear`;
+    return e.note ? `${base} — ${e.note}` : base;
+  }
   return e.type;
 }
 
@@ -97,9 +100,13 @@ function selectedChipValues(grid) {
 
 function renderFoodForm() {
   const suggestions = previousValues("food", "food");
+  const mealTypes = ["Breakfast", "Morning snack", "Lunch", "Afternoon snack", "Dinner"];
   formAreaEl.innerHTML = `
     <div class="form-card">
       <div class="field-row"><label>Time</label><input type="time" id="f-time" value="${nowLocalTime()}"></div>
+      <div class="field-row"><label>Meal</label>
+        ${chipGrid("f-meal-type", mealTypes, { allowOther: false })}
+      </div>
       <div class="field-row"><label>What did you eat?</label>
         <input type="text" id="f-food" placeholder="e.g. Chicken salad">
         ${suggestions.length ? chipGrid("f-suggestions", suggestions, { allowOther: false }) : ""}
@@ -109,6 +116,7 @@ function renderFoodForm() {
         <button class="choice secondary" id="f-cancel">Cancel</button>
       </div>
     </div>`;
+  const mealTypeGrid = wireChipGrid("f-meal-type");
   if (suggestions.length) {
     wireChipGrid("f-suggestions").addEventListener("click", (e) => {
       const chip = e.target.closest(".chip");
@@ -119,7 +127,8 @@ function renderFoodForm() {
   document.getElementById("f-save").onclick = () => {
     const food = document.getElementById("f-food").value.trim();
     if (!food) return;
-    submitEntry({ date: today, time: document.getElementById("f-time").value, type: "food", food });
+    const mealType = selectedChipValues(mealTypeGrid)[0] || "";
+    submitEntry({ date: today, time: document.getElementById("f-time").value, type: "food", food, mealType });
   };
 }
 
@@ -193,6 +202,9 @@ function renderSkinForm() {
           <input type="text" id="skin-other" placeholder="Other location…" style="display:none; margin-top:8px;">
         </div>
       </div>
+      <div class="field-row" style="margin-top:14px;"><label>Note (optional)</label>
+        <input type="text" id="skin-note" placeholder="Anything worth noting…">
+      </div>
       <div class="form-actions">
         <button class="choice" id="skin-save">Save</button>
         <button class="choice secondary" id="skin-cancel">Cancel</button>
@@ -221,7 +233,8 @@ function renderSkinForm() {
       if (other) locationsSelected.push(other);
       if (locationsSelected.length === 0) return;
     }
-    submitEntry({ date: today, time: nowLocalTime(), type: "skin", locations: locationsSelected });
+    const note = document.getElementById("skin-note").value.trim();
+    submitEntry({ date: today, time: nowLocalTime(), type: "skin", locations: locationsSelected, note });
   };
 }
 
