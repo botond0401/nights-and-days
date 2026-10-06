@@ -17,7 +17,8 @@ function todayLocalISO() {
   d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
   return d.toISOString().slice(0, 10);
 }
-dateInput.value = todayLocalISO();
+const dateParam = new URLSearchParams(location.search).get("date");
+dateInput.value = (dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)) ? dateParam : todayLocalISO();
 
 let records = [];
 let loaded = false;

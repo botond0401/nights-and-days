@@ -1,0 +1,33 @@
+name: Auto-location notify
+
+# Runs ~25 min after the phone's daily location capture (20:00 local / 8pm),
+# so the capture has had time to land in the gist first.
+on:
+  schedule:
+    - cron: "25 18 * * *" # 18:25 UTC ≈ 20:25 CEST. Drifts to ~19:25 CET in winter (DST ends).
+  workflow_dispatch: {}
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for today's auto-saved entry
+        id: check
+        run: node scripts/check-auto-entry.js
+        env:
+          GIST_ID: "9286341881cfd023e7ec21b7a821471d"
+
+      - name: Email the auto-saved location
+        if: steps.check.outputs.found == 'true'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          from: Nights Tracker
+          to: ${{ secrets.MAIL_USERNAME }}
+          subject: "Saved your location for tonight"
+          body: ${{ steps.check.outputs.message }}
