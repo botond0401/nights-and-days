@@ -70,7 +70,7 @@ export default {
         }
 
         const geoRes = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?lat=${body.lat}&lon=${body.lon}&format=json&zoom=14&addressdetails=1`,
+          `https://nominatim.openstreetmap.org/reverse?lat=${body.lat}&lon=${body.lon}&format=json&zoom=14&addressdetails=1&accept-language=en`,
           { headers: { "User-Agent": "nights-and-days-auto-capture (personal use)" } }
         );
         if (!geoRes.ok) {
