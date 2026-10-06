@@ -61,9 +61,15 @@ export default {
         if (!body || !body.date || body.lat == null || body.lon == null) {
           return new Response("Missing fields", { status: 400, headers: corsHeaders });
         }
+        // Accept any date string that STARTS with yyyy-MM-dd (e.g. a full
+        // "yyyy-MM-dd HH:mm:ss" timestamp from the phone automation).
+        const date = String(body.date).slice(0, 10);
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+          return new Response("Bad date format", { status: 400, headers: corsHeaders });
+        }
 
         const existing = await readGist();
-        if (existing.some(r => r.date === body.date)) {
+        if (existing.some(r => r.date === date)) {
           return new Response(JSON.stringify({ ok: true, skipped: true, reason: "already logged" }), {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
           });
@@ -87,7 +93,7 @@ export default {
           return new Response("Could not resolve a town/country for that location", { status: 422, headers: corsHeaders });
         }
 
-        const record = { date: body.date, type: "stay", country, place, source: "auto" };
+        const record = { date, type: "stay", country, place, source: "auto" };
         await writeGist([...existing, record].sort((a, b) => a.date.localeCompare(b.date)));
         return new Response(JSON.stringify({ ok: true, country, place }), {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
