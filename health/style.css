@@ -1,0 +1,80 @@
+.back { margin: 0 0 20px; font-size: 0.85rem; }
+
+.header-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.controls { display: flex; align-items: center; margin-bottom: 20px; }
+select#month-select { min-width: 160px; }
+
+.status { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 12px; }
+
+.card { margin-bottom: 24px; }
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 16px;
+}
+.stat-value { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stat-label { color: var(--text-secondary); font-size: 0.8rem; margin-top: 2px; }
+
+#triggers h2, #triggers h3 { margin-top: 0; }
+.trigger-note {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  margin: 2px 0 14px;
+}
+.trigger-list { list-style: none; margin: 0 0 16px; padding: 0; }
+.trigger-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--gridline);
+  font-size: 0.9rem;
+}
+.trigger-list li:last-child { border-bottom: none; }
+.trigger-list .count { color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.trigger-empty { color: var(--text-secondary); font-size: 0.85rem; }
+
+.day-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  background: var(--surface);
+}
+.day-card.empty { opacity: 0.45; }
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+.day-flags { display: flex; gap: 6px; }
+.flag {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--gridline);
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+.flag.stomach { background: #fde2e1; color: #a33; }
+.flag.skin { background: #fdecc8; color: #8a6400; }
+@media (prefers-color-scheme: dark) {
+  .flag.stomach { background: #4a2423; color: #f3a6a3; }
+  .flag.skin { background: #473a16; color: #f0c876; }
+}
+
+.day-row {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  padding: 2px 0;
+}
+.day-row .time { color: var(--text-muted); font-variant-numeric: tabular-nums; margin-right: 8px; }

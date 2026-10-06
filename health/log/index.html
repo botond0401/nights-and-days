@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Log health</title>
+<link rel="stylesheet" href="../../assets/style.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page narrow">
+  <p class="back"><a href="../">← Summary</a></p>
+  <h1>Log</h1>
+
+  <div id="session-list" class="card session-list"></div>
+
+  <div class="add-grid">
+    <button class="add-btn" data-type="food">🍽<span>Food</span></button>
+    <button class="add-btn" data-type="stomach">🤢<span>Stomach</span></button>
+    <button class="add-btn" data-type="toilet">🚽<span>Toilet</span></button>
+    <button class="add-btn" id="skin-btn" data-type="skin">🧴<span>Skin check</span></button>
+  </div>
+
+  <div id="form-area"></div>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

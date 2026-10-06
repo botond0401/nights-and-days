@@ -1,0 +1,79 @@
+.narrow { max-width: 480px; }
+.back { margin: 0 0 20px; font-size: 0.85rem; }
+
+.session-list { margin-bottom: 18px; min-height: 20px; }
+.session-list .empty-note { color: var(--text-secondary); font-size: 0.85rem; }
+
+.session-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--gridline);
+  font-size: 0.9rem;
+}
+.session-item:last-child { border-bottom: none; }
+.session-item .time { color: var(--text-muted); font-variant-numeric: tabular-nums; margin-right: 10px; }
+
+.add-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.add-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 4px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 1.4rem;
+}
+.add-btn span { font-size: 0.7rem; color: var(--text-secondary); font-weight: 600; }
+.add-btn:disabled { opacity: 0.35; }
+
+.form-card {
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.field-row { margin-bottom: 14px; }
+.field-row label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+.field-row input[type="time"],
+.field-row input[type="text"] {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--page);
+  color: var(--text-primary);
+}
+
+.chip-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--page);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.chip.selected { background: var(--series-1); color: #fff; border-color: transparent; }
+
+.form-actions { display: flex; gap: 8px; margin-top: 16px; }
+
+.error-box { color: #e34948; font-size: 0.85rem; margin-top: 8px; }
