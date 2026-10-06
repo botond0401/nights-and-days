@@ -75,8 +75,12 @@ export default {
           });
         }
 
+        // No accept-language override here — that would also anglicize town
+        // names (Zurich instead of Zürich). Town names stay native; the
+        // country name is derived separately below from the language-
+        // independent country_code, so it's always English regardless.
         const geoRes = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?lat=${body.lat}&lon=${body.lon}&format=json&zoom=14&addressdetails=1&accept-language=en`,
+          `https://nominatim.openstreetmap.org/reverse?lat=${body.lat}&lon=${body.lon}&format=json&zoom=14&addressdetails=1`,
           { headers: { "User-Agent": "nights-and-days-auto-capture (personal use)" } }
         );
         if (!geoRes.ok) {
@@ -84,10 +88,19 @@ export default {
         }
         const geo = await geoRes.json();
         const addr = geo.address || {};
-        // UK addresses: Nominatim's top-level "country" is "United Kingdom"; the
-        // constituent country (England/Scotland/Wales/Northern Ireland) usually
-        // lands in "state" — prefer that to match this site's own convention.
-        const country = (addr.country_code === "gb" && addr.state) ? addr.state : addr.country;
+        const cc = (addr.country_code || "").toUpperCase();
+        // UK addresses: use the constituent country (England/Scotland/Wales/
+        // Northern Ireland) from "state" to match this site's convention.
+        let country = addr.country;
+        if (cc === "GB" && addr.state) {
+          country = addr.state;
+        } else if (cc) {
+          try {
+            country = new Intl.DisplayNames(["en"], { type: "region" }).of(cc) || addr.country;
+          } catch {
+            // Intl.DisplayNames unsupported or bad code — fall back to Nominatim's own text.
+          }
+        }
         const place = addr.city || addr.town || addr.village || addr.municipality || addr.county || addr.suburb;
         if (!country || !place) {
           return new Response("Could not resolve a town/country for that location", { status: 422, headers: corsHeaders });
