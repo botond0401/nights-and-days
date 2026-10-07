@@ -18,6 +18,7 @@ jobs:
         run: node scripts/check-auto-entry.js
         env:
           GIST_ID: "9286341881cfd023e7ec21b7a821471d"
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Email the auto-saved location
         if: steps.check.outputs.found == 'true'

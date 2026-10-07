@@ -18,7 +18,11 @@ function localDateString(msAgo = 0) {
 }
 
 async function main() {
-  const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, { cache: "no-store" });
+  // Authenticated (even with a token that has no gist scope) so this runs
+  // against GitHub's 5000/hr rate limit instead of the 60/hr anonymous one —
+  // Actions runners share IP pools and were hitting that limit as 403s.
+  const headers = process.env.GH_TOKEN ? { Authorization: `Bearer ${process.env.GH_TOKEN}` } : {};
+  const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, { cache: "no-store", headers });
   if (!res.ok) throw new Error(`Failed to fetch gist: HTTP ${res.status}`);
   const gist = await res.json();
   const records = JSON.parse(gist.files["nights.json"]?.content || "[]");

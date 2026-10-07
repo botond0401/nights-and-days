@@ -5,7 +5,10 @@ import fs from "node:fs";
 const GIST_ID = process.env.GIST_ID;
 
 async function main() {
-  const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, { cache: "no-store" });
+  // Authenticated so this runs against GitHub's 5000/hr rate limit instead of
+  // the 60/hr anonymous one — Actions runners share IP pools and can hit that.
+  const headers = process.env.GH_TOKEN ? { Authorization: `Bearer ${process.env.GH_TOKEN}` } : {};
+  const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, { cache: "no-store", headers });
   if (!res.ok) throw new Error(`Failed to fetch gist: HTTP ${res.status}`);
   const gist = await res.json();
   const records = JSON.parse(gist.files["nights.json"]?.content || "[]");

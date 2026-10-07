@@ -16,6 +16,7 @@ jobs:
         run: node scripts/check-missed-days.js
         env:
           GIST_ID: "9286341881cfd023e7ec21b7a821471d"
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Email the missed days
         if: steps.missing.outputs.has_missing == 'true'
