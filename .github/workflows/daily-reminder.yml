@@ -1,9 +1,8 @@
 name: Daily nights reminder
 
 on:
-  schedule:
-    - cron: "7 17 * * *" # 17:07 UTC ≈ 19:00 CEST — off the hour to dodge GitHub's on-the-hour
-                          # scheduling congestion. Drifts to ~18:07 CET in winter (DST ends).
+  # Schedule disabled — auto-location capture + its own notification now
+  # covers this. Kept as a manual-only fallback (Actions tab -> Run workflow).
   workflow_dispatch: {}
 
 jobs:
