@@ -23,7 +23,10 @@ async function main() {
   // Actions runners share IP pools and were hitting that limit as 403s.
   const headers = process.env.GH_TOKEN ? { Authorization: `Bearer ${process.env.GH_TOKEN}` } : {};
   const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, { cache: "no-store", headers });
-  if (!res.ok) throw new Error(`Failed to fetch gist: HTTP ${res.status}`);
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`Failed to fetch gist: HTTP ${res.status} — ${body.slice(0, 300)}`);
+  }
   const gist = await res.json();
   const records = JSON.parse(gist.files["nights.json"]?.content || "[]");
 
