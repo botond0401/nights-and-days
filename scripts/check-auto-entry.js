@@ -35,10 +35,11 @@ async function main() {
     return;
   }
 
-  const lines = found
+  const blocks = found
     .sort((a, b) => a.date.localeCompare(b.date))
-    .map(r => `${r.date}: ${r.place}, ${r.country} — fix it here: https://botond0401.github.io/nights-and-days/log/?date=${r.date}`);
-  const message = `Saw you at these — correct any that are wrong:\n${lines.join("\n")}`;
+    .map(r => `Hello there, your night for ${r.date} was logged in ${r.place}, ${r.country}.\n`
+      + `If incorrect, fix it here: https://botond0401.github.io/nights-and-days/log/?date=${r.date}`);
+  const message = blocks.join("\n\n");
   console.log(message);
   fs.appendFileSync(process.env.GITHUB_OUTPUT, `found=true\n`);
   fs.appendFileSync(process.env.GITHUB_OUTPUT, `message<<EOF_MESSAGE\n${message}\nEOF_MESSAGE\n`);
