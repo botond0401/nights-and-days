@@ -3,9 +3,10 @@ import { fetchHealthEntries, saveHealthEntry } from "../../assets/health-data.js
 const sessionListEl = document.getElementById("session-list");
 const formAreaEl = document.getElementById("form-area");
 const skinBtn = document.getElementById("skin-btn");
+const dateInput = document.getElementById("date-input");
 
 let allEntries = [];
-let todayLogged = []; // entries added this session (today)
+let sessionLogged = []; // entries added this page view, for whatever date was selected when saved
 
 function todayLocalDate() {
   const d = new Date();
@@ -17,7 +18,10 @@ function nowLocalTime() {
   d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
   return d.toISOString().slice(11, 16);
 }
-const today = todayLocalDate();
+function selectedDate() { return dateInput.value; }
+
+const dateParam = new URLSearchParams(location.search).get("date");
+dateInput.value = (dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)) ? dateParam : todayLocalDate();
 
 function previousValues(type, field) {
   const counts = new Map();
@@ -29,15 +33,16 @@ function previousValues(type, field) {
 }
 
 function renderSessionList() {
-  const todays = [
-    ...allEntries.filter(e => e.date === today),
-    ...todayLogged,
+  const date = selectedDate();
+  const dayEntries = [
+    ...allEntries.filter(e => e.date === date),
+    ...sessionLogged.filter(e => e.date === date),
   ];
-  if (todays.length === 0) {
-    sessionListEl.innerHTML = `<div class="empty-note">Nothing logged today yet.</div>`;
+  if (dayEntries.length === 0) {
+    sessionListEl.innerHTML = `<div class="empty-note">Nothing logged for ${date} yet.</div>`;
     return;
   }
-  sessionListEl.innerHTML = todays
+  sessionListEl.innerHTML = dayEntries
     .sort((a, b) => a.time.localeCompare(b.time))
     .map(e => `<div class="session-item"><span><span class="time">${e.time}</span>${describe(e)}</span></div>`)
     .join("");
@@ -55,9 +60,10 @@ function describe(e) {
 }
 
 function updateSkinButton() {
-  const loggedToday = allEntries.some(e => e.type === "skin" && e.date === today)
-    || todayLogged.some(e => e.type === "skin");
-  skinBtn.disabled = loggedToday;
+  const date = selectedDate();
+  const alreadyLogged = allEntries.some(e => e.type === "skin" && e.date === date)
+    || sessionLogged.some(e => e.type === "skin" && e.date === date);
+  skinBtn.disabled = alreadyLogged;
 }
 
 function closeForm() { formAreaEl.innerHTML = ""; }
@@ -66,7 +72,7 @@ async function submitEntry(entry) {
   formAreaEl.innerHTML = `<div class="form-card">Saving…</div>`;
   try {
     await saveHealthEntry(entry);
-    todayLogged.push(entry);
+    sessionLogged.push(entry);
     renderSessionList();
     updateSkinButton();
     closeForm();
@@ -128,7 +134,7 @@ function renderFoodForm() {
     const food = document.getElementById("f-food").value.trim();
     if (!food) return;
     const mealType = selectedChipValues(mealTypeGrid)[0] || "";
-    submitEntry({ date: today, time: document.getElementById("f-time").value, type: "food", food, mealType });
+    submitEntry({ date: selectedDate(), time: document.getElementById("f-time").value, type: "food", food, mealType });
   };
 }
 
@@ -162,7 +168,7 @@ function renderStomachForm() {
     const symptom = picked === "__other__" ? document.getElementById("s-symptom-other").value.trim() : picked;
     if (!symptom) return;
     const severity = selectedChipValues(document.getElementById("s-severity"))[0] || "";
-    submitEntry({ date: today, time: document.getElementById("s-time").value, type: "stomach", symptom, severity });
+    submitEntry({ date: selectedDate(), time: document.getElementById("s-time").value, type: "stomach", symptom, severity });
   };
 }
 
@@ -183,7 +189,7 @@ function renderToiletForm() {
   document.getElementById("t-save").onclick = () => {
     const duration = selectedChipValues(durationGrid)[0];
     if (!duration) return;
-    submitEntry({ date: today, time: document.getElementById("t-time").value, type: "toilet", duration });
+    submitEntry({ date: selectedDate(), time: document.getElementById("t-time").value, type: "toilet", duration });
   };
 }
 
@@ -191,7 +197,7 @@ function renderSkinForm() {
   const locations = ["Face", "Chest", "Back", "Shoulders", "Arms"];
   formAreaEl.innerHTML = `
     <div class="form-card">
-      <p class="question" style="margin-top:0;">Any pimples today?</p>
+      <p class="question" style="margin-top:0;">Any pimples that day?</p>
       <div class="chip-grid" id="skin-yn">
         <button type="button" class="chip" data-value="no">No</button>
         <button type="button" class="chip" data-value="yes">Yes</button>
@@ -234,7 +240,7 @@ function renderSkinForm() {
       if (locationsSelected.length === 0) return;
     }
     const note = document.getElementById("skin-note").value.trim();
-    submitEntry({ date: today, time: nowLocalTime(), type: "skin", locations: locationsSelected, note });
+    submitEntry({ date: selectedDate(), time: nowLocalTime(), type: "skin", locations: locationsSelected, note });
   };
 }
 
@@ -243,6 +249,12 @@ document.querySelector(".add-grid").addEventListener("click", (e) => {
   if (!btn || btn.disabled) return;
   const renderers = { food: renderFoodForm, stomach: renderStomachForm, toilet: renderToiletForm, skin: renderSkinForm };
   renderers[btn.dataset.type]();
+});
+
+dateInput.addEventListener("change", () => {
+  closeForm();
+  renderSessionList();
+  updateSkinButton();
 });
 
 (async function init() {

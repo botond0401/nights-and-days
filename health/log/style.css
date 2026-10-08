@@ -1,6 +1,23 @@
 .narrow { max-width: 480px; }
 .back { margin: 0 0 20px; font-size: 0.85rem; }
 
+.date-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.date-row input {
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--page);
+  color: var(--text-primary);
+}
+
 .session-list { margin-bottom: 18px; min-height: 20px; }
 .session-list .empty-note { color: var(--text-secondary); font-size: 0.85rem; }
 

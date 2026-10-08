@@ -1,11 +1,9 @@
 name: Health log reminder
 
-# 8:15, 13:15, 20:15 CEST = 06:15, 11:15, 18:15 UTC. Drifts an hour earlier
-# once CET (winter) kicks in — same caveat as the other reminder workflows.
+# 20:15 CEST = 18:15 UTC. Drifts an hour earlier once CET (winter) kicks in —
+# same caveat as the other reminder workflows.
 on:
   schedule:
-    - cron: "15 6 * * *"
-    - cron: "15 11 * * *"
     - cron: "15 18 * * *"
   workflow_dispatch: {}
 
@@ -22,5 +20,5 @@ jobs:
           password: ${{ secrets.MAIL_PASSWORD }}
           from: Health Tracker
           to: ${{ secrets.MAIL_USERNAME }}
-          subject: "What's happened since last check-in?"
+          subject: "Log today's food, stomach, toilet & skin"
           body: "Log it here: https://botond0401.github.io/nights-and-days/health/log/"

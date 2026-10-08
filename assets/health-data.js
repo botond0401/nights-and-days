@@ -1,19 +1,17 @@
 const WORKER_ORIGIN = "https://aged-bonus-91cf.botond-kov0401.workers.dev";
 
+// In-memory only (not localStorage/sessionStorage) — asked fresh on every
+// page load, reused only for the rest of that same page view so a single
+// visit doesn't prompt twice.
+let cachedPassphrase = null;
+
 export function getPassphrase() {
-  let pass = sessionStorage.getItem("health_passphrase") || localStorage.getItem("health_passphrase");
-  if (!pass) {
-    pass = prompt("Passphrase:") || "";
-    const remember = pass && confirm("Remember on this device? (OK = yes, Cancel = just this session)");
-    if (remember) localStorage.setItem("health_passphrase", pass);
-    else sessionStorage.setItem("health_passphrase", pass);
-  }
-  return pass;
+  if (!cachedPassphrase) cachedPassphrase = prompt("Passphrase:") || "";
+  return cachedPassphrase;
 }
 
 export function forgetPassphrase() {
-  sessionStorage.removeItem("health_passphrase");
-  localStorage.removeItem("health_passphrase");
+  cachedPassphrase = null;
 }
 
 export async function fetchHealthEntries() {
