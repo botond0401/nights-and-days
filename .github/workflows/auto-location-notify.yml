@@ -1,4 +1,4 @@
-name: Auto-location notify
+name: Nights check-in
 
 # Runs ~25 min after the phone's daily location capture (20:00 local / 8pm),
 # so the capture has had time to land in the gist first.
@@ -13,14 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check for today's auto-saved entry
+      - name: Check auto-captures and gaps
         id: check
         run: node scripts/check-auto-entry.js
         env:
           GIST_ID: "9286341881cfd023e7ec21b7a821471d"
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Email the auto-saved location
+      - name: Email the result
         if: steps.check.outputs.found == 'true'
         uses: dawidd6/action-send-mail@v3
         with:
@@ -30,5 +30,5 @@ jobs:
           password: ${{ secrets.MAIL_PASSWORD }}
           from: Nights Tracker
           to: ${{ secrets.MAIL_USERNAME }}
-          subject: "Saved your location for tonight"
+          subject: "Nights tracker update"
           body: ${{ steps.check.outputs.message }}
