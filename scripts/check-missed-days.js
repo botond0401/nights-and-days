@@ -5,13 +5,18 @@ import fs from "node:fs";
 const GIST_ID = process.env.GIST_ID;
 
 async function main() {
-  // Authenticated so this runs against GitHub's 5000/hr rate limit instead of
-  // the 60/hr anonymous one — Actions runners share IP pools and can hit that.
-  const headers = process.env.GH_TOKEN ? { Authorization: `Bearer ${process.env.GH_TOKEN}` } : {};
-  const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, { cache: "no-store", headers });
+  // Raw content URL instead of api.github.com — not subject to the 60/hr
+  // anonymous API rate limit, which Actions runners (shared IPs, hit by
+  // totally unrelated jobs) have tripped before. (GITHUB_TOKEN can't be used
+  // to authenticate api.github.com gist reads either — it has no gist access
+  // at all, "Resource not accessible by integration" — so this raw-URL path
+  // is the fix, not a token.)
+  const res = await fetch(
+    `https://gist.githubusercontent.com/botond0401/${GIST_ID}/raw/nights.json`,
+    { cache: "no-store" }
+  );
   if (!res.ok) throw new Error(`Failed to fetch gist: HTTP ${res.status}`);
-  const gist = await res.json();
-  const records = JSON.parse(gist.files["nights.json"]?.content || "[]");
+  const records = JSON.parse(await res.text());
   const known = new Set(records.map(r => r.date));
 
   const now = new Date();

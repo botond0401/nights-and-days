@@ -23,13 +23,19 @@ function localDateString(msAgo = 0) {
 }
 
 async function main() {
-  const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, { cache: "no-store" });
+  // Raw content URL instead of api.github.com — not subject to the 60/hr
+  // anonymous API rate limit, which Actions runners (shared IPs, hit by
+  // totally unrelated jobs) have tripped at least twice now, causing this
+  // script to fail outright with a 403.
+  const res = await fetch(
+    `https://gist.githubusercontent.com/botond0401/${GIST_ID}/raw/nights.json`,
+    { cache: "no-store" }
+  );
   if (!res.ok) {
     const body = await res.text().catch(() => "");
     throw new Error(`Failed to fetch gist: HTTP ${res.status} — ${body.slice(0, 300)}`);
   }
-  const gist = await res.json();
-  const records = JSON.parse(gist.files["nights.json"]?.content || "[]");
+  const records = JSON.parse(await res.text());
   const knownDates = new Set(records.map(r => r.date));
 
   const blocks = [];
