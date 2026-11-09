@@ -1,4 +1,4 @@
-import { GIST_ID } from "../assets/data.js";
+import { fetchNights } from "../assets/data.js";
 import { COUNTRIES } from "../assets/countries.js";
 
 // Writes go through a Cloudflare Worker proxy (cloudflare-worker/nights-log-proxy.js)
@@ -24,11 +24,7 @@ let records = [];
 let loaded = false;
 
 async function loadRecords() {
-  const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, { cache: "no-store" });
-  if (!res.ok) throw new Error(`Couldn't load existing data (HTTP ${res.status})`);
-  const gist = await res.json();
-  const file = gist.files["nights.json"];
-  records = JSON.parse(file?.content || "[]");
+  records = await fetchNights();
   loaded = true;
 }
 
