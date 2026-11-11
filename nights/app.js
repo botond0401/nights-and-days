@@ -1,4 +1,4 @@
-import { fetchNights } from "../assets/data.js";
+import { fetchNights } from "../assets/data.js?v=20261111174329";
 
 const DATA_START_YEAR = 2024;
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -161,9 +161,16 @@ function populateScopeSelect() {
   scopeSelect.value = state.scope === "lifetime" ? "lifetime" : String(state.year);
 }
 
+function todayLocalISO() {
+  const d = new Date();
+  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().slice(0, 10);
+}
+
 function renderHeatmapGrid(container, year) {
   container.innerHTML = "";
   const byDate = new Map(records.filter(r => r.date.startsWith(String(year))).map(r => [r.date, r]));
+  const today = todayLocalISO();
 
   container.appendChild(document.createElement("div"));
   for (let d = 1; d <= 31; d++) {
@@ -189,14 +196,22 @@ function renderHeatmapGrid(container, year) {
       }
       const dateStr = `${year}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
       const rec = byDate.get(dateStr);
-      cell.className = "hm-cell" + (rec ? " filled" : "");
-      cell.style.background = rec ? colorForRecord(rec) : EMPTY_COLOR;
-      if (rec) {
-        cell.addEventListener("mouseenter", (e) => showTooltip(e, label(rec)));
-        cell.addEventListener("mousemove", moveTooltip);
-        cell.addEventListener("mouseleave", hideTooltip);
+      // Past and today link to the log page for that date (to add or change it);
+      // future days stay plain.
+      const cellEl = dateStr <= today ? document.createElement("a") : cell;
+      if (dateStr <= today) {
+        cellEl.href = `../log/?date=${dateStr}`;
+        cellEl.setAttribute("aria-label", rec ? `${label(rec)} (change)` : `${dateStr} (log)`);
       }
-      container.appendChild(cell);
+      cellEl.className = "hm-cell" + (rec ? " filled" : "") + (dateStr <= today ? " linkable" : "");
+      cellEl.style.background = rec ? colorForRecord(rec) : EMPTY_COLOR;
+      if (dateStr <= today) {
+        const text = rec ? `${label(rec)} · click to change` : `${dateStr} — not logged · click to log`;
+        cellEl.addEventListener("mouseenter", (e) => showTooltip(e, text));
+        cellEl.addEventListener("mousemove", moveTooltip);
+        cellEl.addEventListener("mouseleave", hideTooltip);
+      }
+      container.appendChild(cellEl);
     }
   }
 }

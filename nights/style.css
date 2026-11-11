@@ -1,5 +1,14 @@
 .back { margin: 0 0 20px; font-size: 0.85rem; }
 
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.log-link { white-space: nowrap; text-decoration: none; font-weight: 600; }
+.log-link:hover { text-decoration: none; }
+
 .controls {
   display: flex;
   align-items: center;
@@ -87,6 +96,9 @@ select#scope-select {
 
 .hm-cell.filled { border-color: transparent; }
 .hm-cell.na { visibility: hidden; }
+a.hm-cell { display: block; }
+.hm-cell.linkable { cursor: pointer; }
+.hm-cell.linkable:hover { outline: 2px solid var(--text-primary); outline-offset: 1px; }
 
 .legend {
   display: flex;

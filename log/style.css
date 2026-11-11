@@ -21,6 +21,12 @@
 
 .step { margin-top: 16px; }
 
+.current-note {
+  margin: 10px 0 0;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
 .question {
   font-size: 1.05rem;
   font-weight: 650;

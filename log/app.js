@@ -1,5 +1,5 @@
-import { fetchNights } from "../assets/data.js";
-import { COUNTRIES } from "../assets/countries.js";
+import { fetchNights } from "../assets/data.js?v=20261111174329";
+import { COUNTRIES } from "../assets/countries.js?v=20261111174329";
 
 // Writes go through a Cloudflare Worker proxy (cloudflare-worker/nights-log-proxy.js)
 // so the real GitHub token stays server-side -- GitHub auto-revokes any GitHub
@@ -62,7 +62,19 @@ function guessType(placeText) {
 
 function render(html) { stepEl.innerHTML = html; }
 
+const currentNoteEl = document.getElementById("current-note");
+function updateCurrentNote() {
+  const rec = records.find(r => r.date === dateInput.value);
+  currentNoteEl.hidden = !rec;
+  if (rec) {
+    const desc = rec.type === "transit" ? `in transit (${rec.place}), from ${rec.country}` : `${rec.place}, ${rec.country}`;
+    currentNoteEl.textContent = `Currently logged: ${desc}. Saving will replace it.`;
+  }
+}
+dateInput.addEventListener("change", updateCurrentNote);
+
 function renderZurich() {
+  updateCurrentNote();
   render(`
     <p class="question">Did you sleep in Zürich?</p>
     <div class="choice-grid">
