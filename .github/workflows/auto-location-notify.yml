@@ -1,10 +1,12 @@
 name: Nights check-in
 
-# Runs ~25 min after the phone's daily location capture (20:00 local / 8pm),
-# so the capture has had time to land in the gist first.
+# Runs after the phone's daily location capture (23:00 local). 22:20 UTC is
+# 23:20 in winter (CET) and 00:20 in summer (CEST) — after the capture either
+# way; the script looks back over today and yesterday, so running past
+# midnight (or GitHub's frequent hours-long delays) still finds it.
 on:
   schedule:
-    - cron: "25 18 * * *" # 18:25 UTC ≈ 20:25 CEST. Drifts to ~19:25 CET in winter (DST ends).
+    - cron: "20 22 * * *"
   workflow_dispatch: {}
 
 jobs:

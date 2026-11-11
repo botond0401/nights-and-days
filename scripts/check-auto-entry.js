@@ -11,15 +11,13 @@
 import fs from "node:fs";
 
 const GIST_ID = process.env.GIST_ID;
-// Fixed CEST offset (UTC+2) — drifts by an hour once CET (winter) kicks in,
-// same caveat as the other workflows. Only used to pick date windows, so
-// being off by an hour doesn't matter much here.
-const LOCAL_UTC_OFFSET_HOURS = 2;
+// Local calendar date in Central European time, DST-aware (CET/CEST).
+const TIME_ZONE = "Europe/Zurich";
 const GAP_CHECK_DAYS = 7;
 
 function localDateString(msAgo = 0) {
-  const d = new Date(Date.now() - msAgo + LOCAL_UTC_OFFSET_HOURS * 3600 * 1000);
-  return d.toISOString().slice(0, 10);
+  return new Intl.DateTimeFormat("en-CA", { timeZone: TIME_ZONE, year: "numeric", month: "2-digit", day: "2-digit" })
+    .format(new Date(Date.now() - msAgo));
 }
 
 async function main() {
