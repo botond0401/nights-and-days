@@ -13,7 +13,7 @@ export const SITES = [
   },
   {
     title: "Finance tracker",
-    href: null,
+    href: "https://finance-tracker-beige-eight-76.vercel.app/",
     desc: "Net worth snapshots on the 1st and 15th. Password protected.",
   },
 ];
