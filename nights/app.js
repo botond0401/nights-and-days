@@ -1,4 +1,4 @@
-import { fetchNights } from "../assets/data.js?v=20261111174329";
+import { fetchNights } from "../assets/data.js?v=20261116203435";
 
 const DATA_START_YEAR = 2024;
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];

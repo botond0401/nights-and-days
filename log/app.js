@@ -1,5 +1,5 @@
-import { fetchNights } from "../assets/data.js?v=20261111174329";
-import { COUNTRIES } from "../assets/countries.js?v=20261111174329";
+import { fetchNights } from "../assets/data.js?v=20261116203435";
+import { COUNTRIES } from "../assets/countries.js?v=20261116203435";
 
 // Writes go through a Cloudflare Worker proxy (cloudflare-worker/nights-log-proxy.js)
 // so the real GitHub token stays server-side -- GitHub auto-revokes any GitHub

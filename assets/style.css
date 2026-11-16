@@ -108,7 +108,8 @@ a:hover { text-decoration: underline; }
   gap: 10px;
 }
 
-.link-list a {
+.link-list a,
+.link-list .pending {
   display: block;
   padding: 14px 18px;
   border-radius: 10px;
@@ -121,6 +122,22 @@ a:hover { text-decoration: underline; }
 .link-list a:hover {
   border-color: var(--series-1);
   text-decoration: none;
+}
+
+.link-list .pending {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.link-list .badge {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 1px 7px;
+  vertical-align: 2px;
+  white-space: nowrap;
 }
 
 .link-list .desc {

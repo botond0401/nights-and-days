@@ -5,20 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>Home</title>
-<link rel="stylesheet" href="assets/style.css?v=20261111174329">
+<link rel="stylesheet" href="assets/style.css?v=20261116203435">
 </head>
 <body>
 <div class="page">
   <h1>Home</h1>
   <p class="subtitle">A small personal site.</p>
-  <ul class="link-list">
-    <li>
-      <a href="nights/">
-        Nights
-        <span class="desc">Where I slept each night — by country, town, or in transit.</span>
-      </a>
-    </li>
-  </ul>
+  <ul class="link-list" id="sites"></ul>
 </div>
+<script type="module">
+  import { SITES } from "./assets/sites.js?v=20261116203435";
+
+  const list = document.getElementById("sites");
+  for (const site of SITES) {
+    const item = document.createElement("li");
+    const card = document.createElement(site.href ? "a" : "div");
+    card.className = site.href ? "" : "pending";
+    if (site.href) card.href = site.href;
+
+    const title = document.createElement("span");
+    title.className = "title";
+    title.textContent = site.title;
+    if (site.href && /^https?:\/\//.test(site.href)) title.append(" ↗");
+    if (!site.href) {
+      const badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = "not live yet";
+      title.append(" ", badge);
+    }
+
+    const desc = document.createElement("span");
+    desc.className = "desc";
+    desc.textContent = site.desc;
+
+    card.append(title, desc);
+    item.append(card);
+    list.append(item);
+  }
+</script>
 </body>
 </html>
