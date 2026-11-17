@@ -16,4 +16,9 @@ export const SITES = [
     href: "https://finance-tracker-beige-eight-76.vercel.app/",
     desc: "Net worth snapshots on the 1st and 15th. Password protected.",
   },
+  {
+    title: "Votes",
+    href: "https://finance-tracker-beige-eight-76.vercel.app/votes",
+    desc: "Elections I voted in and where the parties stood. Password protected.",
+  },
 ];
